@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FootprintService } from "../services/footprint.service";
-import { Country, CountryEmissionsForYear, TopCountry } from "../typings/Country";
+import { CountryEmissionsForYear, TopCountry } from "../typings/Country";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
 
   year: number = 1961;
   yearHasSet: boolean = false;
-  countries: Country[] = [];
   allCountriesData: CountryEmissionsForYear[] = [];
   topCountries: TopCountry[] = [];
   intervalId: any;
@@ -27,7 +26,6 @@ export class AppComponent implements OnInit {
   private getCountryIds() {
     const countryCodes: string[] = [];
     this.footprintService.getCountries().subscribe(countries => {
-      this.countries = countries;
       countries.forEach(({ countryCode }) => {
         countryCodes.push(countryCode);
       });
@@ -75,7 +73,7 @@ export class AppComponent implements OnInit {
 
   private setTopCountries() {
     // update year if we do not use setYear function
-    if (this.year < 2025) {
+    if (this.year < 2024) {
       this.year++;
     } else {
       clearInterval(this.intervalId);
