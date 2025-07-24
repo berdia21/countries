@@ -17,7 +17,6 @@ export class AppComponent implements OnInit {
   }
 
   year!: number;
-  yearHasSet: boolean = false;
   allCountriesData: CountryEmissionsForYear[] = [];
   topCountries: TopCountry[] = [];
   intervalId: any;
@@ -54,12 +53,7 @@ export class AppComponent implements OnInit {
   private setYear() {
     const lowestYear = Math.min(...this.allCountriesData.map(c => c.year));
     this.biggestYear = Math.max(...this.allCountriesData.map(c => c.year));
-
-    if (!this.yearHasSet) {
-      this.year = lowestYear;
-      this.yearHasSet = true;
-    }
-
+    this.year = lowestYear;
   }
 
   private setTopCountries() {
