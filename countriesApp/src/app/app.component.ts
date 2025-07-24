@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
   allCountriesData: CountryEmissionsForYear[] = [];
   topCountries: TopCountry[] = [];
   intervalId: any;
-  Math = Math;
   maxCarbonValue: number = 0;
 
   private getCountryIds() {
@@ -44,7 +43,7 @@ export class AppComponent implements OnInit {
       if (index < strings.length) {
         this.footprintService.getCountry(strings[index]).subscribe(country => {
           this.allCountriesData.push(...country);
-
+          // wait to get some countries data before displaying
           if (index > 20) {
             // we can use this function to get year from countries data
             // this.setYear();
