@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
 
   private setTopCountries() {
     // update year if we do not use setYear function
-    if (this.year < 2025) {
+    if (this.year < 2024) {
       this.year++;
     } else {
       clearInterval(this.intervalId);
