@@ -16,12 +16,13 @@ export class AppComponent implements OnInit {
     this.getCountryIds();
   }
 
-  year: number = 1961;
+  year!: number;
   yearHasSet: boolean = false;
   allCountriesData: CountryEmissionsForYear[] = [];
   topCountries: TopCountry[] = [];
   intervalId: any;
   maxCarbonValue: number = 0;
+  biggestYear!: number;
 
   private getCountryIds() {
     const countryCodes: string[] = [];
@@ -37,62 +38,58 @@ export class AppComponent implements OnInit {
   fetchCountriesWithInterval(strings: string[]) {
     let index = 0;
 
-    this.intervalId = setInterval(() => {
+    let interval = setInterval(() => {
       if (index < strings.length) {
         this.footprintService.getCountry(strings[index]).subscribe(country => {
           this.allCountriesData.push(...country);
-          // wait to get some countries data before displaying
-          if (index > 20) {
-            // we can use this function to get year from countries data
-            // this.setYear();
-            this.setTopCountries();
-          }
-
         });
         index++;
       } else {
-        clearInterval(this.intervalId);
+        clearInterval(interval);
+        this.setTopCountries()
       }
-    }, 500);
+    }, 200);
   }
 
   private setYear() {
     const lowestYear = Math.min(...this.allCountriesData.map(c => c.year));
-    const biggestYear = Math.max(...this.allCountriesData.map(c => c.year));
+    this.biggestYear = Math.max(...this.allCountriesData.map(c => c.year));
 
     if (!this.yearHasSet) {
       this.year = lowestYear;
       this.yearHasSet = true;
     }
-    if (this.year < biggestYear) {
-      this.year++;
-    } else {
-      clearInterval(this.intervalId);
-    }
+
   }
 
   private setTopCountries() {
-    // update year if we do not use setYear function
-    if (this.year < 2024) {
-      this.year++;
-    } else {
-      clearInterval(this.intervalId);
-      return
-    }
-
-    let countriesBythisYear: TopCountry[] = [];
-
-    this.allCountriesData.forEach((country, index) => {
-      if (country.year === this.year && country.carbon > 0) {
-        countriesBythisYear.push({
-          countryName: country.countryName,
-          countryCode: country.countryCode.toString(),
-          carbon: country.carbon
-        })
+    this.setYear();
+    this.intervalId = setInterval(() => {
+      if (this.year < this.biggestYear) {
+        this.year++;
+      } else {
+        clearInterval(this.intervalId);
       }
-    });
 
-    this.maxCarbonValue = Math.max(...countriesBythisYear.map(c => c.carbon));
-    this.topCountries = countriesBythisYear.sort((a, b) => b.carbon - a.carbon).slice(0, 10);
+      const countriesByCode = new Map<string, TopCountry>();
+
+      this.allCountriesData.forEach(country => {
+        if (country.year === this.year && country.carbon > 0) {
+          const countryCode = country.countryCode.toString();
+
+          if (!countriesByCode.has(countryCode)) {
+            countriesByCode.set(countryCode, {
+              countryName: country.countryName,
+              countryCode: countryCode,
+              carbon: country.carbon
+            });
+          }
+        }
+      });
+
+      const countriesBythisYear = Array.from(countriesByCode.values());
+      this.maxCarbonValue = Math.max(...countriesBythisYear.map(c => c.carbon));
+      this.topCountries = countriesBythisYear.sort((a, b) => b.carbon - a.carbon).slice(0, 10);
+    }, 1000);
   }
 }
