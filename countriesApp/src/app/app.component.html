@@ -1,0 +1,19 @@
+<main class="main">
+
+  <h2> Year {{year}} </h2>
+
+  <ul>
+    @for ( country of topCountries; track country.countryCode) {
+    <li>
+      <span>{{ country.countryName }} </span>
+      <progress [value]="country.carbon" [max]="maxCarbonValue"></progress>
+      <span>{{ country.carbon }} </span>
+    </li>
+    } @empty {
+    <h2> fetching data... </h2>
+    }
+  </ul>
+
+</main>
+
+<router-outlet />
