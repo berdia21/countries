@@ -5,10 +5,14 @@
 
 
   <ul>
-    @for ( country of topCountries; track country.countryCode) {
+    @for ( country of topCountries; track country.countryCode; let i = $index) {
     <li>
+      <span> {{$index + 1}} </span>
       <span>{{ country.countryName }} </span>
-      <progress [value]="country.carbon" [max]="maxCarbonValue"></progress>
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="getProgressPercentage(country.carbon)">
+        </div>
+      </div>
       <span>{{ country.carbon }} </span>
     </li>
     } @empty {

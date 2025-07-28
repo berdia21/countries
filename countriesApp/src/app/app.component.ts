@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FootprintService } from "../services/footprint.service";
 import { CountryEmissionsForYear, TopCountry } from "../typings/Country";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit {
         clearInterval(interval);
         this.setTopCountries()
       }
-    }, 200);
+    }, 100);
   }
 
   private setYear() {
@@ -85,5 +86,9 @@ export class AppComponent implements OnInit {
       this.maxCarbonValue = Math.max(...countriesBythisYear.map(c => c.carbon));
       this.topCountries = countriesBythisYear.sort((a, b) => b.carbon - a.carbon).slice(0, 10);
     }, 1000);
+  }
+
+  getProgressPercentage(carbonValue: number): number {
+    return this.maxCarbonValue > 0 ? (carbonValue / this.maxCarbonValue) * 100 : 0;
   }
 }

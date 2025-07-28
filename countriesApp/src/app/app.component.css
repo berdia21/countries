@@ -20,14 +20,31 @@ ul li {
   gap: 20px;
 }
 
-ul li span:first-child {
+ul li span:nth-child(2) {
   display: inline-block;
-  width: 200px;
+  width: 160px;
 }
 
-progress {
-  width: 30vw;
-  background-color: transparent;
-  border: none;
-  border-radius: 4px;
+ul li:last-child span:first-child {
+  display: inline-block;
+  margin-left: -8px;
+}
+
+
+.progress-container {
+  flex: 1;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 15px;
+  position: relative;
+  width: 35vw;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4c51af, #4a8fc3);
+  border-radius: 10px;
+  transition: width 0.5s ease-out;
+  min-width: 2px;
 }
